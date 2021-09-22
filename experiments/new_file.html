@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script> -->
+    <!-- <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js'></script> -->
+    <title>Document</title>
+</head>
+<script type="text/javascript">
+    function PreviewImage() {
+        pdffile = document.getElementById("uploadPDF").files[0];
+        pdffile_url = URL.createObjectURL(pdffile);
+        document.getElementById("viewer").src = pdffile_url;
+    }
+</script>
+
+<body>
+    <form name=f1 method=post enctype="multipart/form-data">
+        <input id="uploadPDF" type="file" name="file" />&nbsp;
+        <input type="button" value="Preview" onclick="PreviewImage();" />
+
+        <div style="clear:both">
+            <iframe id="viewer" frameborder="0" scrolling="no" width="300" height="200"></iframe>
+        </div>
+        <button type="submit" name="submit" class="btn btn-success btn-sm">
+          <i class="fa fa-dot-circle-o"></i> Add
+        </button>&emsp;
+    </form>
+</body>
+
+</html>

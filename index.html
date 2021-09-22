@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <title>DigiMedia - Creative SEO HTML5 Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-digimedia-v1.css">
+    <link rel="stylesheet" href="assets/css/animated.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <script src="vendor/jquery/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="index.html" class="logo">
+                            <img src="assets/images/logo-v1.png" alt="">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="#about">About</a></li>
+                            <li class="scroll-to-section"><a href="#services">Services</a></li>
+                            <li class="scroll-to-section"><a href="#portfolio">Projects</a></li>
+                            <!-- <li class="scroll-to-section"><a href="#blog">Blog</a></li> -->
+                            <li class="scroll-to-section"><a href="#contact">Contact</a></li>
+                            <li class="scroll-to-section">
+                                <div class="border-first-button"><a href="#contact">Support US</a></div>
+                            </li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+
+    <div class="main-banner wow fadeIn" id="top" data-wow-duration="1s" data-wow-delay="0.5s">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-6 align-self-center">
+                            <div class="left-content show-up header-text wow fadeInLeft" data-wow-duration="1s" data-wow-delay="1s">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h2 style="color: #fa65b1;">A.V. Productions</h2>
+                                        <h3>We Provide You Best<br><span style="color: #fa65b1;"> (SAFE EASY OWESOME->SEO)</span> products to Handle Your Documents Conversions</h3>
+                                        <p>A.V. Products brings you many facities to interconvert your documents and many more other best facilities with full safety.<br> This PDF to IMAGE facility allow you to <strong style="font-weight: 600;">Extract IMAGE from PDF.</strong></p>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="border-first-button scroll-to-section">
+                                            <a href="#work">Extract Image from PDF</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="right-image wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.5s">
+                                <img src="assets/images/slider-dec.png" alt="">
+                                <h2 style="text-align: center;color: #fa65b1;margin-top: 20px;">(SAFE EASY OWESOME ->SEO) </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            /* display: none; */
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+    </style>
+
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF</span>
+                </h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <div class="left-text files_container">
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="display: flex;flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages">
+                                                                    <input type="number" name="start_page" id="start_pafe" placeholder="Start Page No." min="0">
+                                                                    <input type="number" name="end_page" id="end_pafe" placeholder="End Page No." min="0">
+                                                                </div>
+                                                                <div class="row">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row download_image">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;">
+                                                                    <a href="">Download Your Images</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+        <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;">
+                <a href="#work">Download Your Images</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="about" class="about section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="about-left-image  wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.5s">
+                                <img src="assets/images/about-dec.png" alt="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 align-self-center  wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.5s">
+                            <div class="about-right-content">
+                                <div class="section-heading">
+                                    <h6>About Us</h6>
+                                    <h4>Who is A.V. <em>Productions</em></h4>
+                                    <div class="line-dec"></div>
+                                </div>
+                                <p>We provide<span style="color: #fa65b1;">  Safe Easy Owesome (SEO)</span> Services to interconvert your documents. Extract text, images from documents and Compress Files. Our backend is designed in such a way that we store
+                                    your files details upto 1hr so that in case you by mistake your tab you could get your document and Our Database automatically delete yours files after one hour of uploading.<br>
+                                    <a rel="nofollow" href="#" target="_blank">Support Our Work</a> via Patrion to <a href="#" target="_blank">A.V. Productions</a>in providing you more such facilities in free.</p>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4">
+                                        <div class="skill-item first-skill-item wow fadeIn" data-wow-duration="1s" data-wow-delay="0s">
+                                            <div class="progress" data-percentage="70">
+                                                <span class="progress-left">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <span class="progress-right">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div>
+                                                        70%<br>
+                                                        <span>Python</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-4">
+                                        <div class="skill-item second-skill-item wow fadeIn" data-wow-duration="1s" data-wow-delay="0s">
+                                            <div class="progress" data-percentage="70">
+                                                <span class="progress-left">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <span class="progress-right">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div>
+                                                        70%<br>
+                                                        <span>JavaScript</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-4">
+                                        <div class="skill-item third-skill-item wow fadeIn" data-wow-duration="1s" data-wow-delay="0s">
+                                            <div class="progress" data-percentage="80">
+                                                <span class="progress-left">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <span class="progress-right">
+                          <span class="progress-bar"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div>
+                                                        80%<br>
+                                                        <span>PHP</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .hvr:hover {
+            box-shadow: 0px 0px 15px rgb(0 0 0 / 30%);
+        }
+    </style>
+
+
+    <div id="services" class="services section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
+                        <h6>Our Services</h6>
+                        <h4>What A.V. Productions <em>Provides</em></h4>
+                        <div class="line-dec"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="naccs">
+                        <div class="grid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="menu">
+                                        <div class="first-thumb active hvr">
+                                            <div class="thumb">
+                                                <span class="icon"><img src="assets/images/service-icon-01.png" alt=""></span> Extract Image
+                                            </div>
+                                        </div>
+                                        <div class="hvr">
+                                            <div class="thumb">
+                                                <span class="icon"><img src="assets/images/service-icon-02.png" alt=""></span> Extract Text
+                                            </div>
+                                        </div>
+                                        <div class="hvr">
+                                            <div class="thumb">
+                                                <span class="icon"><img src="assets/images/service-icon-03.png" alt=""></span>Doc Converter
+                                            </div>
+                                        </div>
+                                        <div class="hvr">
+                                            <div class="thumb">
+                                                <span class="icon"><img src="assets/images/service-icon-04.png" alt=""></span> ZIP Maker
+                                            </div>
+                                        </div>
+                                        <div class="last-thumb hvr">
+                                            <div class="thumb">
+                                                <span class="icon"><img src="assets/images/service-icon-01.png" alt=""></span>Handle PDF
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <ul class="nacc">
+                                        <li class="active">
+                                            <div>
+                                                <div class="thumb">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="left-text">
+                                                                <h4>A.V. Image Extractor</h4>
+                                                                <p>A.V. Image Extractor extract high quality images from the document. We provide the facility to specify the formate of image from <span class="pink"><strong> (.png, .jpg, .jpeg)</strong></span>.
+                                                                    You could even specify the number of pages from which you want to extract images.</p>
+                                                                <div class="ticks-list">
+                                                                    <h6> <span class="pink" style="margin-bottom: 20px;"> Extract Images from</span></h6>
+                                                                    <span><i class="fa fa-check"></i> PDF</span> <span><i class="fa fa-check"></i> PPT</span> <span><i class="fa fa-check"></i> .docx</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="right-image">
+                                                                <img src="assets/images/services-image.jpg" alt="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                                <div class="thumb">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="left-text">
+                                                                <h4>A.V. Text Extractor</h4>
+                                                                <p>A.V. Text Extractor extracts text from the document. We save the text in <span class="pink"><strong></strong>.txt file</strong></span>. You could even specify the number of pages from which
+                                                                    you want to extract Text.</p>
+                                                                <div class="ticks-list">
+                                                                    <h6> <span class="pink" style="margin-bottom: 20px;"> Extract Text from</span></h6><span><i class="fa fa-check"></i> PDF</span> <span><i class="fa fa-check"></i>PPT</span> <span><i class="fa fa-check"></i>EXCEL</span>
+                                                                    <span><i class="fa fa-check"></i>.docx</span></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="right-image">
+                                                                <img src="assets/images/services-image-02.jpg" alt="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                                <div class="thumb">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="left-text">
+                                                                <h4>A.V. Doc Converter</h4>
+                                                                <p>A.V. Productions provides you facility to convert one type of document into another type. We Currently provides facility to convert<br> <strong style="color: rgb(119, 116, 116);"> * PPT to PDF<br> * EXCEL to PDF<br> * PDF to DOCX<br>    </strong>                                                                    Products which are <span class="pink"> Coming Soon.</span><br><strong style="color: rgb(119, 116, 116);"> * PDF to PPT<br> * PDF to EXCEL<br></strong>
+                                                                </p>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="right-image">
+                                                                <img src="assets/images/services-image-03.jpg" alt="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                                <div class="thumb">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="left-text">
+                                                                <h4>A.V. ZIP Maker</h4>
+                                                                <p>A.V. Productions provides you facility to Archive your files into one Zip file.</p>
+                                                                <div class="ticks-list">
+                                                                    <h6> <span class="pink" style="margin-bottom: 20px;"> You Could Compress</span></h6><span><i class="fa fa-check"></i> Images</span> <span><i class="fa fa-check"></i>PDF</span> <span><i class="fa fa-check"></i>Video</span>
+                                                                    <span><i class="fa fa-check"></i>PPT</span><span><i class="fa fa-check"></i>EXCEL</span><span><i class="fa fa-check"></i>OTHER</span></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="right-image">
+                                                                <img src="assets/images/services-image-04.jpg" alt="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                                <div class="thumb">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="left-text">
+                                                                <h4>A.V. PDF Handler</h4>
+                                                                <p>A.V. productions provides You best online tool to Handle Your PDF's.<br>With A.V. PDF Editor you can Merge PDF, Split PDF, Images to PDF.</p>
+                                                                <div class="ticks-list">
+                                                                    <h6> <span class="pink" style="margin-bottom: 20px;"> You Could Perform Following Operations</span></h6><span><i class="fa fa-check"></i> Merge PDF</span> <span><i class="fa fa-check"></i> Split PDF</span></div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 align-self-center">
+                                                            <div class="right-image">
+                                                                <img src="assets/images/services-image.jpg" alt="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div id="free-quote" class="free-quote">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 offset-lg-4">
+                    <div class="section-heading  wow fadeIn" data-wow-duration="1s" data-wow-delay="0.3s">
+                        <h6>Get Your Free Quote</h6>
+                        <h4>Grow With Us Now</h4>
+                        <div class="line-dec"></div>
+                    </div>
+                </div>
+                <div class="col-lg-8 offset-lg-2  wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
+                    <form id="search" action="#" method="GET">
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4">
+                                <fieldset>
+                                    <input type="web" name="web" class="website" placeholder="Your website URL..." autocomplete="on" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <fieldset>
+                                    <input type="address" name="address" class="email" placeholder="Email Address..." autocomplete="on" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <fieldset>
+                                    <button type="submit" class="main-button">Get Quote Now</button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+    <div id="portfolio" class="our-portfolio section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="section-heading wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.3s">
+                        <h6>A.V. Productions</h6>
+                        <h4>See Our Recent <em>Projects</em></h4>
+                        <div class="line-dec"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid wow fadeIn" data-wow-duration="1s" data-wow-delay="0.7s">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="loop owl-carousel">
+                        <div class="item">
+                            <a href="#">
+                                <div class="portfolio-item">
+                                    <div class="thumb">
+                                        <img src="assets/images/portfolio-01.jpg" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>Image extractor</h4>
+                                        <span>Completed</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="item">
+                            <a href="#">
+                                <div class="portfolio-item">
+                                    <div class="thumb">
+                                        <img src="assets/images/portfolio-01.jpg" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>Text Extractor</h4>
+                                        <span>In Progress</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="item">
+                            <a href="#">
+                                <div class="portfolio-item">
+                                    <div class="thumb">
+                                        <img src="assets/images/portfolio-02.jpg" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>Doc Converter</h4>
+                                        <span>In Progress</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="item">
+                            <a href="#">
+                                <div class="portfolio-item">
+                                    <div class="thumb">
+                                        <img src="assets/images/portfolio-03.jpg" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>Zip Maker</h4>
+                                        <span>In Progress</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="item">
+                            <a href="#">
+                                <div class="portfolio-item">
+                                    <div class="thumb">
+                                        <img src="assets/images/portfolio-04.jpg" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>PDF Handler</h4>
+                                        <span>In Progress</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="blog" class="blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 offset-lg-4  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.3s">
+                    <div class="section-heading">
+                        <h6>Recent News</h6>
+                        <h4>Check Our Blog <em>Posts</em></h4>
+                        <div class="line-dec"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 show-up wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s">
+                    <div class="blog-post">
+                        <div class="thumb">
+                            <a href="#"><img src="assets/images/blog-post-01.jpg" alt=""></a>
+                        </div>
+                        <div class="down-content">
+                            <span class="category">SEO Analysis</span>
+                            <span class="date">03 August 2021</span>
+                            <a href="#">
+                                <h4>Lorem Ipsum Dolor Sit Amet, Consectetur Adelore Eiusmod Tempor Incididunt</h4>
+                            </a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doers itii eiumod deis tempor incididunt ut labore.</p>
+                            <span class="author"><img src="assets/images/author-post.jpg" alt="">By: Andrea Mentuzi</span>
+                            <div class="border-first-button"><a href="#">Discover More</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s">
+                    <div class="blog-posts">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="post-item">
+                                    <div class="thumb">
+                                        <a href="#"><img src="assets/images/blog-post-02.jpg" alt=""></a>
+                                    </div>
+                                    <div class="right-content">
+                                        <span class="category">SEO Analysis</span>
+                                        <span class="date">24 September 2021</span>
+                                        <a href="#">
+                                            <h4>Lorem Ipsum Dolor Sit Amei Eiusmod Tempor</h4>
+                                        </a>
+                                        <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="post-item">
+                                    <div class="thumb">
+                                        <a href="#"><img src="assets/images/blog-post-03.jpg" alt=""></a>
+                                    </div>
+                                    <div class="right-content">
+                                        <span class="category">SEO Analysis</span>
+                                        <span class="date">24 September 2021</span>
+                                        <a href="#">
+                                            <h4>Lorem Ipsum Dolor Sit Amei Eiusmod Tempor</h4>
+                                        </a>
+                                        <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="post-item last-post-item">
+                                    <div class="thumb">
+                                        <a href="#"><img src="assets/images/blog-post-04.jpg" alt=""></a>
+                                    </div>
+                                    <div class="right-content">
+                                        <span class="category">SEO Analysis</span>
+                                        <span class="date">24 September 2021</span>
+                                        <a href="#">
+                                            <h4>Lorem Ipsum Dolor Sit Amei Eiusmod Tempor</h4>
+                                        </a>
+                                        <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div id="contact" class="contact-us section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
+                        <h6>Contact Us</h6>
+                        <h4>Get In Touch With Us <em>Now</em></h4>
+                        <div class="line-dec"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12 wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="0.25s">
+                    <form id="contact" action="" method="post">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="contact-dec">
+                                    <img src="assets/images/contact-dec.png" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div id="map">
+                                    <iframe src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="636px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="fill-form">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="info-post">
+                                                <div class="icon">
+                                                    <img src="assets/images/phone-icon.png" alt="">
+                                                    <a href="#">010-020-0340</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="info-post">
+                                                <div class="icon">
+                                                    <img src="assets/images/email-icon.png" alt="">
+                                                    <a href="mailto:vishalsingh2508720@gmail.com">avservice@gmail.com</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="info-post">
+                                                <div class="icon">
+                                                    <img src="assets/images/location-icon.png" alt="">
+                                                    <a href="#">Aligarh</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <fieldset>
+                                                <input type="name" name="name" id="name" placeholder="Name" autocomplete="on" required>
+                                            </fieldset>
+                                            <fieldset>
+                                                <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email" required="">
+                                            </fieldset>
+                                            <fieldset>
+                                                <input type="subject" name="subject" id="subject" placeholder="Subject" autocomplete="on">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <fieldset>
+                                                <textarea name="message" type="text" class="form-control" id="message" placeholder="Message" required=""></textarea>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <fieldset>
+                                                <button type="submit" id="form-submit" class="main-button ">Send Message Now</button>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright © 2022 A.V. Productions Co., Ltd. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Scripts -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/animation.js"></script>
+    <script src="assets/js/imagesloaded.js"></script>
+    <script src="assets/js/custom.js"></script>
+
+
+    <!-- owl-carousel for recruitors -->
+    <!-- <script src="js/owl.carousel.min.js"></script> -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let w = window.innerWidth;
+            var owl = $('.owl-carousel');
+            owl.owlCarousel({
+                items: 1,
+                loop: true,
+                autoplay: false
+                    // dots: false
+            });
+        });
+    </script>
+    <script>
+        const dropZone = document.querySelector(".drop_zone");
+        const file_input = document.querySelector("#file_input");
+        const browseBtn = document.querySelector(".browseBtn");
+        const show = document.querySelector("#viewer");
+        const files_listing = document.querySelector("#file_selector");
+        const col_to_show_pdf = document.querySelector("#pdf_to_show");
+        pdf_to_show.style.display = "none";
+
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (!dropZone.classList.contains("dragged")) {
+                dropZone.classList.add("dragged");
+            }
+        })
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("dragged");
+        })
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault(e);
+            dropZone.classList.remove("dragged");
+            console.log(e.dataTransfer.files.length) //gives number of files
+            const files = e.dataTransfer.files;
+            console.log(files);
+            console.log(files[0].name);
+            // const show = document.querySelector("#pdf_to_show embed");
+            if (files) {
+                file_input.files = files;
+                // console.log(show.src);
+                pdf_to_show.style.display = "flex";
+                show_pdf(files[0]);
+                add_fileBtn(file_input.files);
+            }
+        })
+        browseBtn.addEventListener("click", () => {
+            file_input.click();
+        })
+        file_input.addEventListener("change", (e) => {
+            console.log(file_input.files)
+            show_pdf(file_input.files[0])
+            add_fileBtn(file_input.files)
+            pdf_to_show.style.display = "flex";
+        })
+
+        function show_pdf(files) {
+            pdffile = files;
+            pdffile_url = URL.createObjectURL(pdffile);
+            show.src = pdffile_url;
+
+        };
+
+        function add_fileBtn(files) {
+            console.log(files.length)
+            let data = '';
+            for (i = 0; i < files.length; i++) {
+                data += "<span class='files_list_span active' id='" + i + "' onclick='show_pdf(file_input.files[" + i + "])'>" + files[i].name + "</span>";
+            }
+            console.log(files)
+            files_listing.innerHTML = data;
+        }
+    </script>
+
+</body>
+
+</html>

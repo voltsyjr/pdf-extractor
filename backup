@@ -1,0 +1,852 @@
+<?php
+include 'config.php';
+
+// taking file details which is being uploaded by user in form
+if(isset($_FILES['file_input'])){
+    $ip="24014900529";
+    $time = time();
+    $target=$ip.'-'.$time;
+    mkdir($target);
+    $errors= array();
+    $total= sizeof($_FILES['file_input']['name']);
+    for ($i=0;$i<$total;$i++){
+        //geting filename by using name attribute
+        $file_name=$_FILES['file_input']['name'][$i];
+        //geting filesize by using size attribute
+        $file_size=$_FILES['file_input']['size'][$i];
+        //geting filetmp by using tmp_name attribute
+        $file_tmp=$_FILES['file_input']['tmp_name'][$i];
+        //geting file type by using type attribute
+        $file_type=$_FILES['file_input']['type'][$i];
+        echo '<pre>';
+        // var_dump($_FILES['file_input']);
+            echo $file_name.'<br>';
+            echo $file_size.'<br>';
+            echo $file_tmp.'<br>';
+            echo $file_type.'<br>';
+        echo '</pre>';
+            //geting file extension by using explode function
+            $aiehi = explode('.',$file_name);
+            $file_ext= strtolower(end($aiehi));
+            // explode function "." ke bad ka nam de dega jaise in img.jpg m ye explode agr hm '.' pr lgate h to y '.' ke bad ka jpg chodega bo end fun hmain dega
+            $extensions=array("pdf");
+            //Checking wheather extension is correct or not
+            if(in_array($file_ext,$extensions)===false){
+                $errors[]="This extension formate is not allowed, Please choose pdf file.";
+            }
+            // restricting file size to be not more than 2mb
+            // remember here size is in bytes so first convert size to bytes
+            if($file_size>41943040){
+                $errors[]="Files size must be 40mb or lower.";
+            }
+                // cheching if there comes any error in abobe condition  Use empty function to check if errors array is empty or not
+                if(empty($errors)==true){
+                    //if no error than upload file
+                    // adding serevr time after name of image
+                    $new_name=$ip."-".$time."-".$i.".pdf";
+                    echo $new_name."<br>Newname";
+                    $pdf_name=$new_name;
+                    $target1=$target."/".$pdf_name;
+                    echo "<br>target= ".$target1."<br>target";
+                    move_uploaded_file($file_tmp,$target1) or die("\n\nNot uploaded");
+                }else{
+                    print_r($errors);
+                    die();
+                }
+                echo "<br><h1>".$i."complete</h1>";
+    }
+
+$folder=$target;
+//getting author of creating post by his login id usin Session
+session_start();
+$_SESSION['ip']=$ip;
+$sql="INSERT INTO folders values('{$folder}');";
+
+//Concatinte two sql commands
+// remember while concating query use ; in previous one inside
+//run querry by other function given below if query is concatinated
+
+
+// $title=mysqli_real_escape_string($conn,$_POST['post_title']);
+// $description=mysqli_real_escape_string($conn,$_POST['postdesc']);
+// $category=mysqli_real_escape_string($conn,$_POST['category']);
+
+
+
+
+
+
+
+
+
+
+}else{
+
+    echo 'nhi hua';
+}
+if(mysqli_query($conn,$sql)){
+    header("Location: {$hostname}/index.php");
+}else{
+    echo"<div class='alert alert-danger'>Query failed</div>";
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this is pdf_work which can work fine 
+<?php 
+include 'config.php';
+
+// taking file details which is being uploaded by user in form
+if(isset($_POST['ip'])){
+    if(isset($_FILES['file_input'])){
+        $ip=mysqli_real_escape_string($conn,$_POST['ip']);
+        // $title=mysqli_real_escape_string($conn,$_POST['post_title']);
+        $time = time();
+        $target=$ip.'-'.$time;
+        mkdir($target);
+        $errors= array();
+        $total= sizeof($_FILES['file_input']['name']);
+        for ($i=0;$i<$total;$i++){
+            //geting filename by using name attribute
+            $file_name=$_FILES['file_input']['name'][$i];
+            //geting filesize by using size attribute
+            $file_size=$_FILES['file_input']['size'][$i];
+            //geting filetmp by using tmp_name attribute
+            $file_tmp=$_FILES['file_input']['tmp_name'][$i];
+            //geting file type by using type attribute
+            $file_type=$_FILES['file_input']['type'][$i];
+            echo '<pre>';
+            // var_dump($_FILES['file_input']);
+                echo $file_name.'<br>';
+                echo $file_size.'<br>';
+                echo $file_tmp.'<br>';
+                echo $file_type.'<br>';
+            echo '</pre>';
+                //geting file extension by using explode function
+                $aiehi = explode('.',$file_name);
+                $file_ext= strtolower(end($aiehi));
+                // explode function "." ke bad ka nam de dega jaise in img.jpg m ye explode agr hm '.' pr lgate h to y '.' ke bad ka jpg chodega bo end fun hmain dega
+                $extensions=array("pdf");
+                //Checking wheather extension is correct or not
+                if(in_array($file_ext,$extensions)===false){
+                    $errors[]="This extension formate is not allowed, Please choose pdf file.";
+                }
+                // restricting file size to be not more than 2mb
+                // remember here size is in bytes so first convert size to bytes
+                if($file_size>41943040){
+                    $errors[]="Files size must be 40mb or lower.";
+                }
+                    // cheching if there comes any error in abobe condition  Use empty function to check if errors array is empty or not
+                    if(empty($errors)==true){
+                        //if no error than upload file
+                        // adding serevr time after name of image
+                        $new_name=$ip."-".$time."-".$i.".pdf";
+                        echo $new_name."<br>Newname";
+                        $pdf_name=$new_name;
+                        $target1=$target."/".$pdf_name;
+                        echo "<br>target= ".$target1."<br>target";
+                        move_uploaded_file($file_tmp,$target1) or die("\n\nNot uploaded");
+                    }else{
+                        print_r($errors);
+                        die();
+                    }
+                    echo "<br><h1>".$i."complete</h1>";
+        }
+    
+    $folder=$target;
+    $sql="INSERT INTO folders values('{$folder}');";
+    //getting author of creating post by his login id usin Session
+    session_start();
+    $_SESSION['ip']=$ip;
+    
+    //Concatinte two sql commands
+    // remember while concating query use ; in previous one inside
+    //run querry by other function given below if query is concatinated
+    
+    
+    // $title=mysqli_real_escape_string($conn,$_POST['post_title']);
+    // $description=mysqli_real_escape_string($conn,$_POST['postdesc']);
+    // $category=mysqli_real_escape_string($conn,$_POST['category']);
+
+
+    }else{
+        echo "file not sset";
+    }    
+
+}else{
+
+    echo 'isset submit wrong';
+}
+
+
+?>
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF</span>
+                </h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="0">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="0">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <!-- <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit" hidden> -->
+                                                                    <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;">
+                                                                    <a href="#">Download Your Images</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .galary{
+            display: none;
+        }
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+        <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ip="";
+        $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            // console.log(JSON.stringify(data, null, 2));
+			ip=data.ipAddress;
+            ip_to=document.getElementById("ip");
+            ip_to.value=ip;
+        });
+        var extract = document.getElementById("extract_image");
+        var total = file_input.files.length;
+        var start = $('#start_page').val();
+        var end = $('#end_page').val();
+
+
+        document.getElementById("extract_image").addEventListener("click", function (event) {
+            if(start==""){
+                start=0;
+            }
+            if(end==""){
+                end=-1;
+            }
+            document.getElementById("form_data").submit();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<extract_image class="php">
+<?php
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+include 'config.php';
+$at=1;
+// taking file details which is being uploaded by user in form
+if(isset($_FILES['file_input'])){
+    $ip=mysqli_real_escape_string($conn,$_POST['ip']);
+    $time = time();
+    $target=$ip.'-'.$time;
+    mkdir($target);
+    $errors= array();
+    $total= sizeof($_FILES['file_input']['name']);      //number of pdfs
+    $datatosend= array();
+    $target="123456789-1632334159";                     //folder name
+    $just = explode('.',$_FILES['file_input']['name'][0]);
+    $img_name=strtolower($just[0]);
+    $str = $img_name;
+    $chars = str_split($str);
+    $img_name="";
+    foreach ($chars as $char) {
+        if($char!=" "){
+            $img_name.=$char;
+        }
+    }
+
+
+
+
+            $datatosend[]=$img_name;
+        $datatosend[]=$target;
+        $start_page=$_POST['start_page'];
+        $end_page=$_POST['end_page'];
+        $datatosend[]=$start_page;
+        $datatosend[]=$end_page;
+
+    for ($i=0;$i<$total;$i++){
+        //geting filename by using name attribute
+        $file_name=$_FILES['file_input']['name'][$i];
+        //geting filesize by using size attribute
+        $file_size=$_FILES['file_input']['size'][$i];
+        //geting filetmp by using tmp_name attribute
+        $file_tmp=$_FILES['file_input']['tmp_name'][$i];
+        //geting file type by using type attribute
+        $file_type=$_FILES['file_input']['type'][$i];
+        // echo '<pre>';
+        // var_dump($_FILES['file_input']);
+        $datatosend[]= $file_name.'<br>';
+        $datatosend[]= $file_size.'<br>';
+        $datatosend[]= $file_tmp.'<br>';
+        $datatosend[]= $file_type.'<br>';
+        
+        // echo '</pre>';
+            //geting file extension by using explode function
+            $aiehi = explode('.',$file_name);
+            $file_ext= strtolower(end($aiehi));
+            // explode function "." ke bad ka nam de dega jaise in img.jpg m ye explode agr hm '.' pr lgate h to y '.' ke bad ka jpg chodega bo end fun hmain dega
+            $extensions=array("pdf");
+            //Checking wheather extension is correct or not
+            if(in_array($file_ext,$extensions)===false){
+                $errors[]="This extension formate is not allowed, Please choose pdf file.";
+    }
+        //     // restricting file size to be not more than 2mb
+        //     // remember here size is in bytes so first convert size to bytes
+            if($file_size>41943040){
+                $errors[]="Files size must be 40mb or lower.";
+    }
+
+                // cheching if there comes any error in abobe condition  Use empty function to check if errors array is empty or not
+                if(empty($errors)==true){
+                    //if no error than upload file
+                    // adding serevr time after name of image
+                    $new_name=$ip."-".$time."-".$i.".pdf";
+                    $datatosend[]= $new_name."<br>Newname";
+                    $pdf_name=$new_name;
+                    $target1=$target."/".$pdf_name;
+                    $datatosend[]= "<br>target= ".$target1."<br>target";
+                    move_uploaded_file($file_tmp,$target1) or $at=0;
+                    if($at==0){
+                        goto label1;
+                    }
+                }else{
+                    // print_r($errors);
+                    // die();
+                }
+                label1:
+                $datatosend[]= "<br><h1>".$i."complete</h1>";
+                $json_data = json_encode($datatosend);
+                echo $json_data;
+                
+    }
+    
+// $folder=$target;
+// //getting author of creating post by his login id usin Session
+// // session_start();
+// // $_SESSION['ip']=$ip;
+// $sql="INSERT INTO folders values('{$folder}');";
+
+}else{
+
+    $datatosend[]= 'nhi hua';
+    $json_data = json_encode($datatosend);
+    echo $json_data;
+}
+
+
+
+
+    // if(mysqli_query($conn,$sql)){
+    //     // header("Location: {$hostname}/index.php");
+    //     $datatosend[]=$img_name;
+    //     $datatosend[]=$target;
+    //     $start_page=$_POST['start_page'];
+    //     $end_page=$_POST['end_page'];
+    //     $datatosend[]=$start_page;
+    //     $datatosend[]=$end_page;
+    //     if($total>1){
+    //         exec('python index.py '.$img_name.' '.$target.' '.'0',$return);
+    //         $datatosend[]=$return;
+    //     }else{
+    //         exec('python index.py '.$img_name.' '.$target.' '.'1'.' '.$start_page.' '.$end_page,$return);
+    //         $datatosend[]=$return;
+    //     }
+    //     $json_data = json_encode($datatosend);
+    //     echo $json_data;
+    // }else{
+    //     $datatosend[]="<div class='alert alert-danger'>Query failed</div>";
+    //     $json_data = json_encode($datatosend);
+    //     echo $json_data;
+    // }
+?>
+</extract_image>

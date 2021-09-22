@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: #eff5fe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .drop_zone {
+        width: 300px;
+        min-height: 200px;
+        border: 2px dashed #0288d147;
+        margin: 30px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition: all 0.25s ease-in-out;
+    }
+    
+    .upload_container {
+        border-radius: 25px;
+        background-color: #ffffff;
+        box-shadow: 0px 20px 20px #0000002e;
+    }
+    
+    .icon_container {
+        width: 75px;
+        height: 100px;
+        position: relative;
+    }
+    
+    .icon_container img {
+        width: 75px;
+        position: absolute;
+        transform-origin: bottom;
+        transition: all 0.25s ease-in-out;
+    }
+    
+    .icon_container img.centre {
+        z-index: 3;
+    }
+    
+    .icon_container .right,
+    .icon_container .left {
+        filter: grayscale(0.5);
+        transform: scale(0.9);
+    }
+    
+    .dragged .icon_container .right {
+        transform: rotate(10deg) translate(10px) scale(0.9);
+        transform-origin: bottom;
+    }
+    
+    .dragged .icon_container .left {
+        transform: rotate(-10deg) translate(-10px) scale(0.9);
+        transform-origin: bottom;
+    }
+    
+    .dragged .icon_container .centre {
+        transform: translateY(-5px);
+    }
+    
+    .dragged.drop_zone {
+        background-color: #eff5fe;
+    }
+    
+    .drop_zone #file_input {
+        display: none;
+    }
+    
+    .browseBtn {
+        color: #2196f3;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <section class="upload_container">
+        <div class="drop_zone">
+            <div class="icon_container">
+                <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                <img src="media/images/file.svg" alt="" draggable="false" class="right">
+            </div>
+            <input type="file" id="file_input" multiple>
+            <div class="title">
+                Drop your Files here or, <span class="browseBtn">Browse</span>
+            </div>
+        </div>
+    </section>
+    <script>
+        const dropZone = document.querySelector(".drop_zone");
+        const file_input = document.querySelector("#file_input");
+        const browseBtn = document.querySelector(".browseBtn");
+
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (!dropZone.classList.contains("dragged")) {
+                dropZone.classList.add("dragged");
+            }
+        })
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("dragged");
+        })
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault(e);
+            dropZone.classList.remove("dragged");
+            console.log(e.dataTransfer.files.length) //gives number of files
+            const files = e.dataTransfer.files;
+            console.log(files);
+            if (files) {
+                file_input.files = files;
+            }
+        })
+        browseBtn.addEventListener("click", () => {
+            file_input.click();
+        })
+        file_input.addEventListener("change", (e) => {
+                console.log(file_input.files)
+            })
+            // const uploadFile = ()=>{
+            //     const files = file_input.files[0]
+            //     const formData = new FormData()
+            //     formData.append("myFile",file)
+            // }
+            // const updateProgress = (e) => {
+
+        // }
+    </script>
+</body>
+
+</html>
