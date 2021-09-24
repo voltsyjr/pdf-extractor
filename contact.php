@@ -18,7 +18,7 @@
                             </div>
                             <div class="col-lg-5">
                                 <div id="map">
-                                    <iframe src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="636px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d347.55563122838066!2d77.84079940944363!3d27.94667225269035!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sn.c.c%20school%20khair%20khair%20uttar%20pradesh!5e0!3m2!1sen!2sin!4v1632412134577!5m2!1sen!2sin" width="100%" height="636px" frameborder="0" style="border:0" allowfullscreen></iframe>
                                 </div>
                             </div>
                             <div class="col-lg-7">

@@ -7,27 +7,24 @@ import sys
 import fitz as ft
 import cgi
 print()
-# fs = cgi.FieldStorage()
-# j=int(fs["j"].value)         #starting page
-# k=int(fs["k"].value)         #ending page
 img_name = sys.argv[1]
 folder_name = sys.argv[2]
 page_set=sys.argv[3]
 page_set=int(page_set)
-print(img_name,",",folder_name,",",page_set)
+# print(img_name,",",folder_name,",",page_set)
 if(page_set==1):
     start_page=int(sys.argv[4])
     end_page=int(sys.argv[5])
-    print(img_name,",",folder_name,",",page_set,start_page,end_page)
-    print("yes")
-print("no")
+    # print(img_name,",",folder_name,",",page_set,start_page,end_page)
+    # print("yes")
+# print("no")
 image_list_names=set()
 mydir = os.getcwd()  # would be the MAIN folder
-print("my old dir", mydir,"foldername=",folder_name)
+# print("my old dir", mydir,"foldername=",folder_name)
 mydir_tmp = mydir + "//" + folder_name  # add the testA folder name
 mydir_new = os.chdir(mydir_tmp)  # change the current working directory
 mydir = os.getcwd()  # set the main directory again, now it calls testA
-print("my new dir", mydir)
+# print("my new dir", mydir)
 rootdir = mydir
 substr=img_name
 zipname=substr + '.zip'
@@ -42,11 +39,14 @@ for file in os.listdir(rootdir):
             folders_list.add(d)
 
 for file in folders_list:
-        print("my filename=", file)
+        # print("my filename=", file)
         pdf=ft.open(file)
         if(page_set==1):
             j=start_page-1
             k=end_page-1
+            if(j>k):
+                j=0
+                k=len(pdf)-1
             if(k>len(pdf) or k<0):
                 k=len(pdf)-1
             if(j>len(pdf)):
@@ -54,7 +54,7 @@ for file in folders_list:
         else:
             j=0
             k=len(pdf)-1
-        print(j,k)
+        # print(j,k)
         for i in range(j,k+1):
             image_list=(pdf.getPageImageList(i))
             for image in image_list:
@@ -77,8 +77,12 @@ for file in folders_list:
                 pix=None
         pdf.close()
 zipObj.close()
-
-print("<h1>finish</h1>")
+print(len(image_list_names))
+for image in image_list_names:
+    print(image)
+# print(image_list_names)
+print(zipname)
+print("1")
 
 
 # b= '<h1>',totalImage,'detected</h1>'

@@ -131,22 +131,100 @@
     <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
         <div class="container">
             <div class="row">
-                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
                 <?php
-                    if(isset($_SERVER['ip'])){
-                        echo "session started";
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
                     }else{
-                        echo "session not started";
+                        echo "1";
                     }
 
 ?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            // console.log(JSON.stringify(data, null, 2));
+            // console.log("this is from")
+            ip_s=data.ipAddress;
+            var url = "createsession.php?zt="+ip_s;
+            window.location.href = url;
+        });
 
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
 
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+                <?php
+                    // if(isset($_SESSION['ip'])){
+                    //     echo "session started".$_SESSION['ip'];
+                    // }else{
+                    //     echo "session not started";
+                    // }
+
+?>
                 </span>
                 </h2>
             </div>
             <div class="row">
-                <div class="col-lg-12">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <div>
                         <div>
                             <div class="row">
@@ -193,15 +271,15 @@
                                                             </div>
                                                         </form>
                                                             <div class="row download_image ">
-                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;">
-                                                                    <a href="#">Download Your Images</a>
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
                                                             <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
                                                                 Your PDF File</h4>
-                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <iframe src="" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
                                                             <div class="row">
                                                                 <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
                                                                     <!-- <span class="files_list_span" id="1">file1.pdf</span>
@@ -221,15 +299,16 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
 
 
     <style>
-        .galary{
-            display: none;
-        }
+        /* .galary{ */
+            /* display: none; */
+        /* } */
         .galary img {
             width: 100%;
             /* height: 80%; */
@@ -244,72 +323,87 @@
         }
     </style>
     <div class="container galary">
-        <div class="heading">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
             <div style="width: 300px;position: relative;margin: auto;">
                 <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
             </div>
         </div>
 
         <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
-            <div class="col-md-2 col-12">
-                <img src="../image_data/data_1.png" alt="">
-                <img src="../image_data/data_2.png" alt="">
-                <img src="../image_data/data_3.png" alt="">
-                <img src="../image_data/data_4.png" alt="">
-                <img src="../image_data/data_5.png" alt="">
-                <img src="../image_data/data_6.png" alt="">
-            </div>
-            <div class="col-md-2 col-12">
-                <img src="../image_data/data_21.png" alt="">
-                <img src="../image_data/data_22.png" alt="">
-                <img src="../image_data/data_23.png" alt="">
-                <img src="../image_data/data_27.png" alt="">
-            </div>
-            <div class="col-md-2 col-12">
-                <img src="../image_data/data_13.png" alt="">
-                <img src="../image_data/data_14.png" alt="">
-                <img src="../image_data/data_15.png" alt="">
-                <img src="../image_data/data_16.png" alt="">
-                <img src="../image_data/data_31.png" alt="">
-                <img src="../image_data/data_32.png" alt="">
-            </div>
-            <div class="col-md-2 col-12">
-                <img src="../image_data/data_21.png" alt="">
-                <img src="../image_data/data_22.png" alt="">
-                <img src="../image_data/data_23.png" alt="">
-                <img src="../image_data/data_27.png" alt="">
-            </div>
-        </div>
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
         <div class="row">
             <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
-                <a href="#">Download Your Images</a>
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
             </div>
         </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
     </div>
-
+    
+ 
     <script>
-        var ip="";
+        var ip_s="";
+        // var ip_s="106.195.109.136";
         var ip_to=""
-        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
-        //     // console.log(JSON.stringify(data, null, 2));
-		// 	ip=data.ipAddress;
-        //     ip_to=document.getElementById("ip");
-        //     ip_to.value=ip;
-        //     // console.log(ip)
-        // });
-        ip_to=document.getElementById("ip");
-        ip_to.value=123456789;
-        var extract = document.getElementById("extract_image");
-        var total = file_input.files.length;
-        var start = $('#start_page');
-        var end = $('#end_page');
+      
+        $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            // console.log(JSON.stringify(data, null, 2));
+            // console.log("this is from")
+            ip_s=data.ipAddress;
+        });
 
 
-        // $("#extract_image").click(function (event) {
-            
-            // document.getElementById("form_data").submit();
             $("form#form_data").submit(function(e) {
                 e.preventDefault();    
+                ip_to=document.getElementById("ip");
+                ip_to.value=ip_s;
+                var extract = document.getElementById("extract_image");
+                var total = file_input.files.length;
+                var start = $('#start_page');
+                var end = $('#end_page');
                 if(start.val()==""){
                     start.val(1);
                 }
@@ -317,9 +411,11 @@
                     end.val(-1);
                 }
                 var formData = new FormData(this);
-                console.log("han chal rha h");
-                console.log(formData);
-                console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
                 $.ajax({
                     url: "https://localhost/python/pdf/extract_image.php",
                     type: 'POST',
@@ -328,77 +424,33 @@
                         // alert(data);
                         $('.galary').css("display","block");
                         $('.download_image').css("display","flex");
-                        console.log(data);
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
                     },
                     cache: false,
                     contentType: false,
                     processData: false
                 });
-                console.log("doneeeeeeeeeeeeeeeee")
             });
-        // });
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // var formData = document.getElementById('form_data');
-        // var form = $('#form_data').serialize();               
-        // var FormData = new FormData($(form)[1]);
-
-        // formData.append('username', 'Chris');
-    //     document.getElementById("extract_image").addEventListener("click", function (event) {
-    //     event.preventDefault();
-    //     // console.log("formdata=");
-    //     // console.log(form);
-
-    //     $('.galary').css("display","block");
-    //     $('.download_image').css("display","flex");
-    //     if(start==""){
-    //         start=0;
-    //     }
-    //     if(end==""){
-    //         end=-1;
-    //     }
-    //     console.log(file_input.files);
-    //     console.log(ip);
-    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
-    //     console.log(obj)
-    //     let myjson = JSON.stringify(obj);
-    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-    //     setTimeout(function () {
-    //         $.ajax({
-    //             url: "http://localhost/python/pdf/extract_image.php",
-    //             type: "POST",
-    //             data: myjson,
-    //             contentType: false,
-    // processData: false,
-    //             success: function (data) {
-    //                 if (data.status == false) {
-    //                 }else{
-    //                     $('.galary').css("display","block");
-    //                     $('.download_image').css("display","flex");
-    //                     console.log("yessssssssssssssssss");
-    //                     console.log(data);
-    //                 }
-    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
-    //             }
-    //         });
-    //     }, 80);
-    // });
     </script>

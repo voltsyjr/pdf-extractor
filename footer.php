@@ -39,7 +39,7 @@
         const browseBtn = document.querySelector(".browseBtn");
         const show = document.querySelector("#viewer");
         const files_listing = document.querySelector("#file_selector");
-        const col_to_show_pdf = document.querySelector("#pdf_to_show");
+        const pdf_to_show = document.querySelector("#pdf_to_show");
         pdf_to_show.style.display = "none";
 
         dropZone.addEventListener("dragover", (e) => {

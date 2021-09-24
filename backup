@@ -850,3 +850,4644 @@ if(isset($_FILES['file_input'])){
     // }
 ?>
 </extract_image>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+include 'config.php';
+$at=1;
+// taking file details which is being uploaded by user in form
+if(isset($_FILES['file_input'])){
+    $ip=mysqli_real_escape_string($conn,$_POST['ip']);
+    $time = time();
+    $target=$ip.'-'.$time;
+    mkdir($target);
+    $errors= array();
+    $total= sizeof($_FILES['file_input']['name']);      //number of pdfs
+    $datatosend= array();
+    // $target="123456789-1632334159";                     //folder name
+    $just = explode('.',$_FILES['file_input']['name'][0]);
+    $img_name=strtolower($just[0]);
+    $str = $img_name;
+    $chars = str_split($str);
+    $img_name="";
+    foreach ($chars as $char) {
+        if($char!=" "){
+            $img_name.=$char;
+        }
+    }
+        // $datatosend[]=$img_name;
+        // $datatosend[]=$time;
+        // $datatosend[]=$target;
+        // $start_page=$_POST['start_page'];
+        // $end_page=$_POST['end_page'];
+        // $datatosend[]=$start_page;
+        // $datatosend[]=$end_page;
+
+    for ($i=0;$i<$total;$i++){
+        //geting filename by using name attribute
+        $file_name=$_FILES['file_input']['name'][$i];
+        //geting filesize by using size attribute
+        $file_size=$_FILES['file_input']['size'][$i];
+        //geting filetmp by using tmp_name attribute
+        $file_tmp=$_FILES['file_input']['tmp_name'][$i];
+        //geting file type by using type attribute
+        $file_type=$_FILES['file_input']['type'][$i];
+        // echo '<pre>';
+        // var_dump($_FILES['file_input']);
+        // $datatosend[]= $file_name.'<br>';
+        // $datatosend[]= $file_size.'<br>';
+        // $datatosend[]= $file_tmp.'<br>';
+        // $datatosend[]= $file_type.'<br>';
+        
+        // echo '</pre>';
+            //geting file extension by using explode function
+            $aiehi = explode('.',$file_name);
+            $file_ext= strtolower(end($aiehi));
+            // explode function "." ke bad ka nam de dega jaise in img.jpg m ye explode agr hm '.' pr lgate h to y '.' ke bad ka jpg chodega bo end fun hmain dega
+            $extensions=array("pdf");
+            //Checking wheather extension is correct or not
+            if(in_array($file_ext,$extensions)===false){
+                $errors[]="This extension formate is not allowed, Please choose pdf file.";
+    }
+        //     // restricting file size to be not more than 2mb
+        //     // remember here size is in bytes so first convert size to bytes
+            if($file_size>41943040){
+                $errors[]="Files size must be 40mb or lower.";
+    }
+
+                // cheching if there comes any error in abobe condition  Use empty function to check if errors array is empty or not
+                if(empty($errors)==true){
+                    //if no error than upload file
+                    // adding serevr time after name of image
+                    $new_name=$ip."-".$time."-".$i.".pdf";
+                    // $datatosend[]= $new_name."<br>Newname";
+                    $pdf_name=$new_name;
+                    $target1=$target."/".$pdf_name;
+                    // $datatosend[]= "<br>target= ".$target1."<br>target";
+                    move_uploaded_file($file_tmp,$target1) or $at=0;
+                    if($at==0){
+                        goto label1;
+                    }
+                }else{
+                    label1:
+                    // print_r($errors);
+                    $datatosend['errors']= $errors;
+                    $datatosend['status']= false;
+                }
+                // $datatosend[]= "<br><h1>".$i."complete</h1>";
+                // $json_data = json_encode($datatosend);
+                // echo $json_data;
+                
+    }
+    
+$folder=$target;
+//getting author of creating post by his login id usin Session
+// session_start();
+// $_SESSION['ip']=$ip;
+$sql="INSERT INTO folders (Fname) values('{$folder}');";
+
+}else{
+
+    $datatosend['error']= 'Something goes wrong please reload page and try again';
+    $datatosend['status']= false;
+    $json_data = json_encode($datatosend);
+    echo $json_data;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if(mysqli_query($conn,$sql)){
+        // header("Location: {$hostname}/index.php");
+        // $datatosend[]=$img_name;
+        // $datatosend[]=$target;
+        $start_page=$_POST['start_page'];
+        $end_page=$_POST['end_page'];
+        // $datatosend[]=$start_page;
+        // $datatosend[]=$end_page;
+        if($total>1){
+            exec('python index.py '.$img_name.' '.$target.' '.'0',$return);
+            $datatosend[]=$return;
+        }else{
+            exec('python index.py '.$img_name.' '.$target.' '.'1'.' '.$start_page.' '.$end_page,$return);
+            $datatosend[]=$return;
+        }
+        $datatosend['status']=true;
+        $datatosend['errors']=false;
+        $json_data = json_encode($datatosend);
+        echo $json_data;
+    }else{
+        $datatosend[]="Query failed";
+        $json_data = json_encode($datatosend);
+        echo $json_data;
+    }
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        // console.log("not set");
+        // alert("want to set session")
+        ip="";
+        $.getJSON('https://ipwhois.app/json/', function(data) {
+            console.log(JSON.stringify(data, null, 2));
+			console.log(data.ip);
+            ip=data.ip;
+            // ip_to=document.getElementById("ip");
+            // ip_to.value=ip;
+            // // console.log(ip)
+        });
+        var url = "createsession.php?zt='"+ip+"'";
+        window.location.href = url;
+
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF</span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip="";
+        var ip_to=""
+        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+        //     // console.log(JSON.stringify(data, null, 2));
+		// 	ip=data.ipAddress;
+        //     ip_to=document.getElementById("ip");
+        //     ip_to.value=ip;
+        //     // console.log(ip)
+        // });
+        
+        
+        $.getJSON('https://ipwhois.app/json/', function(data) {
+            console.log(JSON.stringify(data, null, 2));
+            ip=data.ip;
+            // ip_to=document.getElementById("ip");
+            // ip_to.value=ip;
+            // // console.log(ip)
+        });
+        
+        
+        
+        
+        
+        
+        
+        ip_to=document.getElementById("ip");
+        // ip_to.value=123456789;
+        ip_to.value=ip;
+        console.log(ip_to.value);
+        console.log(ip);
+        var extract = document.getElementById("extract_image");
+        var total = file_input.files.length;
+        var start = $('#start_page');
+        var end = $('#end_page');
+
+
+        // $("#extract_image").click(function (event) {
+            
+            // document.getElementById("form_data").submit();
+            $("form#form_data").submit(function(e) {
+                e.preventDefault();    
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                // console.log("han chal rha h");
+                // console.log(formData);
+                // console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+
+
+            
+            // $(document).ajaxStart(function(){
+            //     // Show image container
+                
+            //     // $("#ajax_load").zIndex()
+            // });
+            // $(document).ajaxComplete(function(){
+            //     // Hide image container
+                
+            //     // $("#loader").hide();
+            //     });
+
+
+
+                // console.log("doneeeeeeeeeeeeeeeee")
+            });
+        // });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        // console.log("not set");
+        // alert("want to set session")
+        ip="";
+        $.getJSON('https://ipwhois.app/json/', function(data) {
+            console.log(JSON.stringify(data, null, 2));
+			console.log(data.ip);
+            ip=data.ip;
+            // ip_to=document.getElementById("ip");
+            // ip_to.value=ip;
+            // // console.log(ip)
+        })
+        var url = "createsession.php?zt='"+ip+"'";
+        window.location.href = url;
+
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF</span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip="";
+        var ip_to=""
+        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+        //     // console.log(JSON.stringify(data, null, 2));
+		// 	ip=data.ipAddress;
+        //     ip_to=document.getElementById("ip");
+        //     ip_to.value=ip;
+        //     // console.log(ip)
+        // });
+        
+        
+        $.getJSON('https://ipwhois.app/json/', function(data) {
+            console.log(JSON.stringify(data, null, 2));
+            ip=data.ip;
+            // ip_to=document.getElementById("ip");
+            // ip_to.value=ip;
+            // // console.log(ip)
+        });
+        
+        
+        
+        
+        
+        
+        
+        $("form#form_data").submit(function(e) {
+        ip_to=document.getElementById("ip");
+        // ip_to.value=123456789;
+        ip_to.value=ip;
+        console.log(ip_to.value);
+        console.log("ip");
+        var extract = document.getElementById("extract_image");
+        var total = file_input.files.length;
+        var start = $('#start_page');
+        var end = $('#end_page');
+
+
+        // $("#extract_image").click(function (event) {
+            
+            // document.getElementById("form_data").submit();
+                e.preventDefault();    
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                // console.log("han chal rha h");
+                // console.log(formData);
+                // console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+
+
+            
+            // $(document).ajaxStart(function(){
+            //     // Show image container
+                
+            //     // $("#ajax_load").zIndex()
+            // });
+            // $(document).ajaxComplete(function(){
+            //     // Hide image container
+                
+            //     // $("#loader").hide();
+            //     });
+
+
+
+                // console.log("doneeeeeeeeeeeeeeeee")
+            });
+        // });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        // console.log("not set");
+        // alert("want to set session")
+        ip="";
+        ip="106.195.109.136";
+        // $.getJSON('https://ipwhois.app/json/', function(data) {
+        //     console.log(JSON.stringify(data, null, 2));
+		// 	console.log(data.ip);
+        //     ip=data.ip;
+        //     // ip_to=document.getElementById("ip");
+        //     // ip_to.value=ip;
+        //     // // console.log(ip)
+        // })
+        var url = "createsession.php?zt='"+ip+"'";
+        window.location.href = url;
+
+}else if(zt_val.text()==0){
+    console.log(" started session");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo " setted session";
+                    }else{
+                        echo "not setted session";
+                    }
+
+?>
+                </span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip="";
+        var ip_to=""
+        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+        //     // console.log(JSON.stringify(data, null, 2));
+		// 	ip=data.ipAddress;
+        //     ip_to=document.getElementById("ip");
+        //     ip_to.value=ip;
+        //     // console.log(ip)
+        // });
+        
+        
+        $.getJSON('https://ipwhois.app/json/', function(data) {
+            console.log(JSON.stringify(data, null, 2));
+            ip=data.ip;
+            // ip_to=document.getElementById("ip");
+            // ip_to.value=ip;
+            // // console.log(ip)
+        });
+        
+        
+        
+        
+        
+        
+        
+        $("form#form_data").submit(function(e) {
+        ip_to=document.getElementById("ip");
+        // ip_to.value=123456789;
+        ip_to.value=ip;
+        console.log(ip_to.value);
+        console.log("ip");
+        var extract = document.getElementById("extract_image");
+        var total = file_input.files.length;
+        var start = $('#start_page');
+        var end = $('#end_page');
+
+
+        // $("#extract_image").click(function (event) {
+            
+            // document.getElementById("form_data").submit();
+                e.preventDefault();    
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                // console.log("han chal rha h");
+                // console.log(formData);
+                // console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+
+
+            
+            // $(document).ajaxStart(function(){
+            //     // Show image container
+                
+            //     // $("#ajax_load").zIndex()
+            // });
+            // $(document).ajaxComplete(function(){
+            //     // Hide image container
+                
+            //     // $("#loader").hide();
+            //     });
+
+
+
+                // console.log("doneeeeeeeeeeeeeeeee")
+            });
+        // });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        // console.log("not set");
+        // alert("want to set session")
+        var url = "createsession.php?zt=123456789";
+        window.location.href = url;
+
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "session started";
+                    }else{
+                        echo "session not started";
+                    }
+
+?>
+                </span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip="";
+        var ip_to=""
+        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+        //     // console.log(JSON.stringify(data, null, 2));
+		// 	ip=data.ipAddress;
+        //     ip_to=document.getElementById("ip");
+        //     ip_to.value=ip;
+        //     // console.log(ip)
+        // });
+        
+        
+        // $.getJSON('https://ipwhois.app/json/', function(data) {
+        //     console.log(JSON.stringify(data, null, 2));
+		// 	console.log(data.ip);
+        //     // ip_to=document.getElementById("ip");
+        //     // ip_to.value=ip;
+        //     // // console.log(ip)
+        // });
+       
+
+
+
+
+
+
+        
+
+
+        // $("#extract_image").click(function (event) {
+            
+            // document.getElementById("form_data").submit();
+            $("form#form_data").submit(function(e) {
+                e.preventDefault();    
+                ip_to=document.getElementById("ip");
+                ip_to.value=123456789;
+                var extract = document.getElementById("extract_image");
+                var total = file_input.files.length;
+                var start = $('#start_page');
+                var end = $('#end_page');
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                // console.log("han chal rha h");
+                // console.log(formData);
+                // console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+
+
+            
+            // $(document).ajaxStart(function(){
+            //     // Show image container
+                
+            //     // $("#ajax_load").zIndex()
+            // });
+            // $(document).ajaxComplete(function(){
+            //     // Hide image container
+                
+            //     // $("#loader").hide();
+            //     });
+
+
+
+                // console.log("doneeeeeeeeeeeeeeeee")
+            });
+        // });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        // console.log("not set");
+        // alert("want to set session")
+        var url = "createsession.php?zt=123456789";
+        window.location.href = url;
+
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "session started";
+                    }else{
+                        echo "session not started";
+                    }
+
+?>
+                </span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip="";
+        var ip_to=""
+        // $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+        //     // console.log(JSON.stringify(data, null, 2));
+		// 	ip=data.ipAddress;
+        //     ip_to=document.getElementById("ip");
+        //     ip_to.value=ip;
+        //     // console.log(ip)
+        // });
+        
+        
+        // $.getJSON('https://ipwhois.app/json/', function(data) {
+        //     console.log(JSON.stringify(data, null, 2));
+		// 	console.log(data.ip);
+        //     // ip_to=document.getElementById("ip");
+        //     // ip_to.value=ip;
+        //     // // console.log(ip)
+        // });
+       
+
+
+
+
+
+
+        
+
+
+        // $("#extract_image").click(function (event) {
+            
+            // document.getElementById("form_data").submit();
+            $("form#form_data").submit(function(e) {
+                e.preventDefault();    
+                ip_to=document.getElementById("ip");
+                ip_to.value=123456789;
+                var extract = document.getElementById("extract_image");
+                var total = file_input.files.length;
+                var start = $('#start_page');
+                var end = $('#end_page');
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                // console.log("han chal rha h");
+                // console.log(formData);
+                // console.log("start="+start.val()+"end="+end.val()+"ip="+ip_to.value);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+
+
+            
+            // $(document).ajaxStart(function(){
+            //     // Show image container
+                
+            //     // $("#ajax_load").zIndex()
+            // });
+            // $(document).ajaxComplete(function(){
+            //     // Hide image container
+                
+            //     // $("#loader").hide();
+            //     });
+
+
+
+                // console.log("doneeeeeeeeeeeeeeeee")
+            });
+        // });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+        #pages input {
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fa65b1;
+            transition: all 0.3s;
+            width: 150px;
+            margin-top: 30px;
+            background-color: #eff5fe;
+        }
+        
+        #pages input:focus {
+            border: 1px solid transparent;
+            box-shadow: 0 0 5px #fa65b1;
+            border-radius: 10px;
+        }
+        
+        .files_container {
+            background-color: #eff5fe;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 50px 10px 50px;
+        }
+        
+        .drop_zone {
+            width: 300px;
+            min-height: 200px;
+            border: 2px dashed #0288d147;
+            margin: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .upload_container {
+            border-radius: 25px;
+            background-color: #ffffff;
+            box-shadow: 0px 10px 20px #0808082e;
+            margin-bottom: 40px;
+        }
+        
+        .icon_container {
+            width: 75px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .icon_container img {
+            width: 75px;
+            position: absolute;
+            transform-origin: bottom;
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .icon_container img.centre {
+            z-index: 3;
+        }
+        
+        .icon_container .right,
+        .icon_container .left {
+            filter: grayscale(0.5);
+            transform: scale(0.9);
+        }
+        
+        .dragged .icon_container .right {
+            transform: rotate(10deg) translate(10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .left {
+            transform: rotate(-10deg) translate(-10px) scale(0.9);
+            transform-origin: bottom;
+        }
+        
+        .dragged .icon_container .centre {
+            transform: translateY(-5px);
+        }
+        
+        .dragged.drop_zone {
+            background-color: #eff5fe;
+        }
+        
+        .drop_zone #file_input {
+            display: none;
+        }
+        
+        .browseBtn {
+            color: #2196f3;
+            cursor: pointer;
+        }
+        
+        .download_image {
+            display: none;
+        }
+        
+        .files_list_span {
+            display: inline-block !important;
+            padding: 3px 10px !important;
+            color: #fa65b1 !important;
+            border: 1px solid #fa65b1 !important;
+            border-radius: 23px;
+            font-weight: 500 !important;
+            letter-spacing: 0.3px !important;
+            transition: all .5s;
+            margin: 5px 5px;
+        }
+        
+        .files_list_span:hover {
+            background-color: #fa65b1;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        input.files_list_span {
+            background-color: aliceblue;
+        }
+        .btns_to_show{
+            display: none;
+        }
+    </style>
+    <!-- Working place most of the time -->
+    <div id="work" class="work-section section" style="padding-top: 0;margin-bottom: 50px;padding-top: 100px;margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+
+
+
+            <!-- setting session -->
+                <div id="ipget" style="position: absolute;z-index:-334;width:10px">
+                <?php
+                    if(isset($_SESSION['ip'])){
+                        echo "0";
+                    }else{
+                        echo "1";
+                    }
+
+?>
+</div>
+<script>
+    var zt_val = $('#ipget');
+    if(zt_val.text()==1){
+        $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            // console.log(JSON.stringify(data, null, 2));
+            // console.log("this is from")
+            ip_s=data.ipAddress;
+            var url = "createsession.php?zt="+ip_s;
+            window.location.href = url;
+        });
+
+}else if(zt_val.text()==0){
+    // console.log(" set");
+}
+
+</script>
+                <h2 style="text-align: center;margin-bottom: 60px;"> <span class="pink"> Extract Image From PDF
+                <?php
+                    // if(isset($_SESSION['ip'])){
+                    //     echo "session started".$_SESSION['ip'];
+                    // }else{
+                    //     echo "session not started";
+                    // }
+
+?>
+                </span>
+                </h2>
+            </div>
+            <div class="row">
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="position: relative;">
+
+
+
+
+
+
+
+
+                <div class="col-lg-12" style="width:calc(100% - 24px );height:100%;position:absolute;right:12px;top:0;z-index:-5;opacity:1; " id="ajax_load">
+            <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader" style="width: 100%;height:100%;position:relative;opacity:1;background-color:rgb(255, 255, 255, 0.4)">
+        <div class="preloader-inner" style="background-color: unset;">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul>
+                                        <li style="    box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.15);padding: 50px;border-radius: 5px;z-index: 33;position: relative;">
+                                            <div>
+                                                <div>
+                                                    <div class="row" style="display: flex;flex-wrap: wrap;justify-content: center;">
+                                                        <div class="col-lg-6">
+                                                            <form action="<?php $_SERVER["PHP_SELF"] ?>" method="POST"  enctype="multipart/form-data" id="form_data" name="form_data" autocomplete="off">
+
+                                                            <div class="left-text files_container" >
+                                                                <h4 style="text-align: center;margin-bottom: 10px;">
+                                                                    Choose Your PDF File</h4>
+                                                                <section class="upload_container">
+                                                                    <div class="drop_zone">
+                                                                        <div class="icon_container">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="centre">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="left">
+                                                                            <img src="media/images/file.svg" alt="" draggable="false" class="right">
+                                                                        </div>
+                                                                        <input type="file" id="file_input" name="file_input[]" multiple accept=".pdf">
+                                                                        <div class="title">
+                                                                            Drop your Files here or, <span class="browseBtn">Browse</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+
+
+
+                                                                <div style="flex-wrap: wrap;justify-content: space-around;width: 100%;" id="pages" class="btns_to_show">
+                                                                    <input type="number" name="start_page" id="start_page" placeholder="Start Page No." min="1">
+                                                                    <input type="number" name="end_page" id="end_page" placeholder="End Page No." min="1">
+                                                                    <input type="text" name="ip" id="ip" hidden>
+
+                                                                </div>
+                                                                <div class="row btns_to_show">
+                                                                    <input type="submit" value="Extract images" class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">
+                                                                    <!-- <span class="files_list_span" style="margin-top: 10px;" id="extract_image" name="submit">Extract images</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                            <div class="row download_image ">
+                                                                <div class="border-first-button scroll-to-section" style="text-align: center;margin-top: 30px;" id="just_download">
+                                                                    <!-- <a href="#" >Download Your Images</a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6" style="display: flex;flex-direction: column;justify-content: center;align-items: center;width: 380px;margin-left: 50px;" id="pdf_to_show">
+                                                            <h4 style="text-align: center;margin-top: -10px;margin-bottom: 10px;">
+                                                                Your PDF File</h4>
+                                                            <iframe src="data.pdf" type="application/pdf" frameBorder="0" scrolling="auto" height="100%" width="100%" id="viewer"></iframe>
+                                                            <div class="row">
+                                                                <div class="col" style="display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 30px;" id="file_selector">
+                                                                    <!-- <span class="files_list_span" id="1">file1.pdf</span>
+                                                                    <span class="files_list_span" id="2">file2.pdf</span>
+                                                                    <span class="files_list_span" id="3">file3.pdf</span>
+                                                                    <span class="files_list_span" id="4">file4.pdf</span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* .galary{ */
+            /* display: none; */
+        /* } */
+        .galary img {
+            width: 100%;
+            /* height: 80%; */
+            /* padding-bottom: 15px; */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #726ae3;
+        }
+        
+        .galary h4 {
+            width: 300px;
+        }
+    </style>
+    <div class="container galary">
+    <?php
+                    if(isset($_SESSION['ip'])){
+                        $sql="SELECT Fname,images,zip,time from folders where ip='{$_SESSION['ip']}' and time=(Select max(time) from folders where ip='{$_SESSION['ip']}');" or die();
+                        $result=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($result)>0){
+
+                        ?>
+
+ <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+        <?php 
+           
+                $row=mysqli_fetch_assoc($result);
+                // echo "yes";
+                $img_data="";
+                $str = $row['images'];
+                $myArr = explode('`',$str);
+                $folder=$row['Fname'];
+                $j=0;
+                $total_images=sizeof($myArr);
+                
+                for($i=1;$i<$total_images+1;$i=$i+6){
+                    $img_data.="<div class='col-md-2 col-12'>";
+                    for($k=0;$k<6 && $j<$total_images;$k++){
+                        $img_data.="<img src='".$folder."//".$myArr[$j]."' alt=''>";
+                        $j=$j+1;
+                    }
+                    $img_data.="</div>";
+                }
+
+                echo $img_data;
+                ?>
+                </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+            <?php
+                echo "<a href='".$folder."//".$row['zip']."' target='_blank'>Download Your Images</a>";
+                ?>
+            </div>
+        </div>
+                <?php
+}else{
+                // echo "<h4>query failed</h4>";
+            }
+        ?>
+        
+
+<?php
+                    }else{
+                        // echo "session not started";
+                    }
+
+?>
+
+        <!-- <div class="heading">
+            <div style="width: 300px;position: relative;margin: auto;">
+                <h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_1.png" alt="">
+                <img src="../image_data/data_2.png" alt="">
+                <img src="../image_data/data_3.png" alt="">
+                <img src="../image_data/data_4.png" alt="">
+                <img src="../image_data/data_5.png" alt="">
+                <img src="../image_data/data_6.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_13.png" alt="">
+                <img src="../image_data/data_14.png" alt="">
+                <img src="../image_data/data_15.png" alt="">
+                <img src="../image_data/data_16.png" alt="">
+                <img src="../image_data/data_31.png" alt="">
+                <img src="../image_data/data_32.png" alt="">
+            </div>
+            <div class="col-md-2 col-12">
+                <img src="../image_data/data_21.png" alt="">
+                <img src="../image_data/data_22.png" alt="">
+                <img src="../image_data/data_23.png" alt="">
+                <img src="../image_data/data_27.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center">
+                <a href="#">Download Your Images</a>
+            </div>
+        </div> -->
+    </div>
+    
+ 
+    <script>
+        var ip_s="";
+        // var ip_s="106.195.109.136";
+        var ip_to=""
+      
+        $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            // console.log(JSON.stringify(data, null, 2));
+            // console.log("this is from")
+            ip_s=data.ipAddress;
+        });
+
+
+            $("form#form_data").submit(function(e) {
+                e.preventDefault();    
+                ip_to=document.getElementById("ip");
+                ip_to.value=ip_s;
+                var extract = document.getElementById("extract_image");
+                var total = file_input.files.length;
+                var start = $('#start_page');
+                var end = $('#end_page');
+                if(start.val()==""){
+                    start.val(1);
+                }
+                if(end.val()==""){
+                    end.val(-1);
+                }
+                var formData = new FormData(this);
+                $(document).ajaxStart(function() {          //set loader to ajax
+                    $("#ajax_load").css("z-index","50");
+                }).ajaxStop(function() {
+                    $("#ajax_load").css("z-index","-5");
+                });
+                $.ajax({
+                    url: "https://localhost/python/pdf/extract_image.php",
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // alert(data);
+                        $('.galary').css("display","block");
+                        $('.download_image').css("display","flex");
+                        var img_data="";
+                        let str = data[1];
+                        var myArr = str.split("`");
+                        var j=0;
+                        var total_images=data[0];
+                        
+                        for(i=1;i<total_images+1;i=i+6){
+                            // console.log("yes");
+                            img_data+="<div class='col-md-2 col-12'>";
+                            for(k=0;k<6 && j<total_images;k++){
+                                img_data+="<img src='"+data[3]+"/"+myArr[j]+"' alt=''>";
+                                j=j+1;
+                            }
+                            img_data+="</div>";
+                        }
+                        // console.log(img_data,total_images,j);
+                        var gallary = '<div class="heading"><div style="width: 300px;position: relative;margin: auto;"><h4 style="text-align: center;margin-bottom: 60px;margin-top: 80px;"> <span style="border-bottom: 3px solid #fa65b1;padding-bottom: 3px;"> Your </span></Your> <span class="pink" style="border-bottom: 3px solid #726ae3;padding-bottom: 3px;">Iamge Gallery</span></h4></div></div><div class="row" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;">'+img_data+'</div><div class="row"><div class="border-first-button scroll-to-section download_image" style="text-align: center;margin-top: 30px;display:flex;justify-content:center"><a href="'+data[3]+"/"+data[2]+'" target="_blank">Download Your Images</a></div></div>'
+                        $('.galary').html(gallary);
+                        var just_download="<a href='"+data[3]+"/"+data[2]+"' target='_blank' >Download Your Images</a>"
+                        $('#just_download').html(just_download);
+                        start.val("");
+                        end.val("");
+                        // console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            });
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var formData = document.getElementById('form_data');
+        // var form = $('#form_data').serialize();               
+        // var FormData = new FormData($(form)[1]);
+
+        // formData.append('username', 'Chris');
+    //     document.getElementById("extract_image").addEventListener("click", function (event) {
+    //     event.preventDefault();
+    //     // console.log("formdata=");
+    //     // console.log(form);
+
+    //     $('.galary').css("display","block");
+    //     $('.download_image').css("display","flex");
+    //     if(start==""){
+    //         start=0;
+    //     }
+    //     if(end==""){
+    //         end=-1;
+    //     }
+    //     console.log(file_input.files);
+    //     console.log(ip);
+    //     let obj = { files: file_input.files,ip_address:ip,total:total,start:start,end:end};
+    //     console.log(obj)
+    //     let myjson = JSON.stringify(obj);
+    //     console.log("nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "http://localhost/python/pdf/extract_image.php",
+    //             type: "POST",
+    //             data: myjson,
+    //             contentType: false,
+    // processData: false,
+    //             success: function (data) {
+    //                 if (data.status == false) {
+    //                 }else{
+    //                     $('.galary').css("display","block");
+    //                     $('.download_image').css("display","flex");
+    //                     console.log("yessssssssssssssssss");
+    //                     console.log(data);
+    //                 }
+    //                 setTimeout(function () { $('#oalert').fadeOut(); }, 3000);
+    //             }
+    //         });
+    //     }, 80);
+    // });
+    </script>

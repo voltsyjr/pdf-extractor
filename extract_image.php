@@ -8,7 +8,7 @@ $at=1;
 if(isset($_FILES['file_input'])){
     $ip=mysqli_real_escape_string($conn,$_POST['ip']);
     $time = time();
-    $target=$ip.'-'.$time;
+    $target="data/".$ip.'-'.$time;
     mkdir($target);
     $errors= array();
     $total= sizeof($_FILES['file_input']['name']);      //number of pdfs
@@ -90,35 +90,11 @@ if(isset($_FILES['file_input'])){
     }
     
 $folder=$target;
+$image_list="";
 //getting author of creating post by his login id usin Session
 // session_start();
 // $_SESSION['ip']=$ip;
-$sql="INSERT INTO folders values('{$folder}');";
-
-}else{
-
-    $datatosend['error']= 'Something goes wrong please reload page and try again';
-    $datatosend['status']= false;
-    $json_data = json_encode($datatosend);
-    echo $json_data;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if(mysqli_query($conn,$sql)){
-        // header("Location: {$hostname}/index.php");
-        // $datatosend[]=$img_name;
+// $datatosend[]=$img_name;
         // $datatosend[]=$target;
         $start_page=$_POST['start_page'];
         $end_page=$_POST['end_page'];
@@ -126,18 +102,48 @@ $sql="INSERT INTO folders values('{$folder}');";
         // $datatosend[]=$end_page;
         if($total>1){
             exec('python index.py '.$img_name.' '.$target.' '.'0',$return);
-            $datatosend[]=$return;
+            // $datatosend[]=$return;
         }else{
             exec('python index.py '.$img_name.' '.$target.' '.'1'.' '.$start_page.' '.$end_page,$return);
-            $datatosend[]=$return;
+            // $datatosend[]=$return;
         }
-        $datatosend['status']=true;
-        $datatosend['errors']=false;
-        $json_data = json_encode($datatosend);
-        echo $json_data;
-    }else{
-        $datatosend[]="Query failed";
-        $json_data = json_encode($datatosend);
-        echo $json_data;
-    }
+        $total_img=(int)$return[1];
+        $datatosend[]=$total_img;
+        for($i=2;$i<$total_img+1;$i++){
+            $image_list.=$return[$i]."`";
+        }
+        $image_list.=$return[$total_img+1];
+        $datatosend[]=$image_list;
+        $last=sizeof($return);
+        $datatosend[]=$return[$last-2];
+        $datatosend[]=$folder;
+        if($return[$last-1]=="1"){
+            // $datatosend[]="han ho rha h kaam";
+            $sql="INSERT INTO folders (Fname,ip,images,time,zip) values('{$folder}','{$ip}','{$image_list}','{$time}','{$return[$last-2]}');";
+            if(mysqli_query($conn,$sql)){
+                // header("Location: {$hostname}/index.php");
+                $datatosend['status']=true;
+                // $datatosend['errors']=false;
+                $json_data = json_encode($datatosend);
+                echo $json_data;
+            }else{
+                    $datatosend[]="Query failed";
+                    $datatosend['errors']="Query failed";
+                    $datatosend['status']= false;
+                    $json_data = json_encode($datatosend);
+                    echo $json_data;
+                }
+                
+            // $json_data = json_encode($datatosend);
+            //     echo $json_data;
+        }
+
+}else{
+
+    $datatosend['errors']= 'Something goes wrong please reload page and try again';
+    $datatosend['status']= false;
+    $json_data = json_encode($datatosend);
+    echo $json_data;
+}
+
 ?>
